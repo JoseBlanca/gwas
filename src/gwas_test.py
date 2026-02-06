@@ -8,11 +8,7 @@ def create_gwas_test_pheno(mean, std_dev=1, size=100):
     return numpy.random.normal(mean, std_dev, size)
 
 
-if __name__ == "__main__":
-    print("Test")
-    num_indis = 1000
-    pheno_geno1 = create_gwas_test_pheno(1, size=num_indis)
-    pheno_geno2 = create_gwas_test_pheno(1, size=num_indis)
+def calc_glm_for_two_genos(pheno_geno1, pheno_geno2):
     phenos = numpy.concatenate([pheno_geno1, pheno_geno2])
     genos = numpy.concatenate(
         [numpy.full((pheno_geno1.size,), 0), numpy.full((pheno_geno1.size,), 1)]
@@ -23,4 +19,13 @@ if __name__ == "__main__":
         data=pheno_geno,
         family=sm.families.Gaussian(),
     ).fit()
+    return model
+
+
+if __name__ == "__main__":
+    print("Test")
+    num_indis = 1000
+    pheno_geno1 = create_gwas_test_pheno(1, size=num_indis)
+    pheno_geno2 = create_gwas_test_pheno(1, size=num_indis)
+    model = calc_glm_for_two_genos(pheno_geno1, pheno_geno2)
     print(model.summary())
